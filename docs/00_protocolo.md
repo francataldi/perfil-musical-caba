@@ -54,9 +54,24 @@ ponderarlas) se toma y se documenta en la Etapa 4.
 <!-- REVISAR: decidir en Etapa 4 si las celdas de baja confianza se excluyen o se ponderan
      por raiz(n_eventos). Escribir la decision aca cuando este tomada. -->
 
-**Plan de degradación.** Si tras la Etapa 1 hay menos de 3.000 eventos geolocalizados, el
-panel trimestral no cierra y se degrada a semestral (n = 48 × 6 = 288), dejando nota en
-este documento. La degradación se decide por el conteo, no por lo que convenga al modelo.
+**Ventana temporal: se excluyen 2020 y 2021.** *(Enmienda del 2026-08-05, ver registro
+al pie.)* La pandemia no es variación normal de la oferta cultural: es un shock exógeno
+que la suprimió casi por completo durante meses por decisión administrativa. Incluir esos
+trimestres rompería el supuesto central del estudio — que la composición de la oferta se
+explica por características del barrio — porque durante ese período se explica por el
+estado de las restricciones sanitarias, que es idéntico para los 48 barrios.
+
+Se excluye el bloque completo 2020Q1–2021Q4 (8 trimestres). El panel se arma con
+2017–2019 más 2022 en adelante. Las series temporales quedan **discontinuas**, lo cual
+tiene una consecuencia concreta: el baseline B2 (persistencia respecto del trimestre
+anterior) no se puede calcular para el primer trimestre posterior al hueco, y esas
+observaciones se excluyen del cómputo de B2 en vez de compararse contra un trimestre
+separado por dos años.
+
+**Plan de degradación.** Si tras la Etapa 1 hay menos de 3.000 eventos geolocalizados, o
+si la cobertura efectiva tras excluir la pandemia no llega a 36 meses, el panel trimestral
+no cierra y se degrada a semestral (n = 48 × 6 = 288), dejando nota en este documento. La
+degradación se decide por el conteo, no por lo que convenga al modelo.
 
 ---
 
@@ -234,3 +249,4 @@ Se listan acá para que ninguna aparezca después como "hallazgo":
 | Fecha | Qué cambió | Por qué |
 |---|---|---|
 | 2026-08-01 | Versión inicial congelada | — |
+| 2026-08-05 | § 2: se excluyen 2020Q1–2021Q4 del panel | Al inventariar fuentes (Etapa 1) se confirmó que los datos históricos disponibles cubren la pandemia. Es un shock exógeno común a los 48 barrios, no variación explicable por covariables territoriales. La decisión se toma **antes** de ver ninguna composición, así que no está contaminada por resultados. |

@@ -8,9 +8,9 @@
 > parchea: se degrada el diseño y se documenta el cambio.
 
 **Última actualización:** 2026-08-05
-**Etapa actual:** 5 — EDA composicional (adelantada; no depende de tener datos)
-**Próximo paso:** Etapa 1 — adquisición. El núcleo matemático ya está cerrado y verificado;
-las visualizaciones de la Etapa 5 necesitan datos reales para tener sentido.
+**Etapa actual:** 1 — Adquisición
+**Próximo paso:** Franco implementa `scripts/01_descarga_ba_data.py` (esqueleto listo) y
+sondea el volumen del archivo histórico de Alternativa Teatral.
 
 **Entorno:** `musica-caba` creado desde `environment.yml`. Activar con
 `conda activate musica-caba`. Pendiente antes de la Etapa 1: `playwright install chromium`.
@@ -40,12 +40,19 @@ las visualizaciones de la Etapa 5 necesitan datos reales para tener sentido.
 
 **Entregables:** `data/raw/eventos_YYYYMMDD.parquet`, `scripts/`, `docs/01_fuentes.md`
 
-- [ ] `docs/01_fuentes.md` con la tabla de inventario de fuentes
-- [ ] Esquema unificado `Evento` definido (con `id` hash estable y `scraped_at`)
-- [ ] Fuente 1 — agenda cultural GCBA (la más fácil, victoria temprana)
-- [ ] Fuente 2 — Songkick (API oficial)
-- [ ] Fuente 3 — al menos una vía Playwright (standalone, **no** Jupyter)
+- [x] `docs/01_fuentes.md` con la tabla de inventario y **volumen estimado por fuente**
+- [x] Esquema unificado `Evento` en `src/esquema.py` (`id` hash SHA-256 estable + `scraped_at`)
+- [ ] Fuente 1 — BA Data / `actividades-culturales` (esqueleto listo en `scripts/01_descarga_ba_data.py`)
+- [ ] Sondeo de volumen del archivo histórico de Alternativa Teatral
+- [ ] Fuente 2 — Alternativa Teatral (scraping HTML, la fuente de volumen)
+- [ ] Fuente 3 — Songkick, si llega la API key (solicitud pendiente)
 - [ ] Deduplicación entre fuentes + tasa de solapamiento reportada
+
+> ⚠️ **Hallazgo del 2026-08-05:** BA Data aporta ~200 eventos de música (≈7% del gate) y
+> su serie termina en 2022. Es fuente de práctica y control de calidad, no de volumen.
+> El volumen depende del archivo histórico de Alternativa Teatral, todavía sin medir.
+> **Plan B decidido:** si no se llega a 3.000, se mantiene el objeto de estudio y se
+> degrada el grano temporal a semestral/anual, con enmienda al protocolo.
 
 **Gate de salida**
 - [ ] ≥ 3.000 eventos únicos tras deduplicación
