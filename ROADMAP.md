@@ -9,7 +9,11 @@
 
 **Última actualización:** 2026-08-05
 **Etapa actual:** 5 — EDA composicional (adelantada; no depende de tener datos)
-**Próximo paso:** verificar CLR/ILR contra `composition-stats` y arrancar las visualizaciones
+**Próximo paso:** Etapa 1 — adquisición. El núcleo matemático ya está cerrado y verificado;
+las visualizaciones de la Etapa 5 necesitan datos reales para tener sentido.
+
+**Entorno:** `musica-caba` creado desde `environment.yml`. Activar con
+`conda activate musica-caba`. Pendiente antes de la Etapa 1: `playwright install chromium`.
 
 ---
 
@@ -127,14 +131,14 @@
 - [ ] Dendrograma de barrios con distancia de Aitchison
 - [ ] Narrativa escrita en primera persona
 
-**Gate de salida — `tests/test_composicional.py`** (44 tests, todos pasando)
+**Gate de salida — `tests/`** (49 tests, todos pasando en el entorno `musica-caba`)
 - [x] `ilr_inv(ilr(x)) == x` a tolerancia numérica
 - [x] La base es ortonormal: `Vᵀ V = I`
 - [x] La distancia de Aitchison es invariante ante perturbación
 - [x] El cierre preserva las razones entre partes
 - [x] ILR es una isometría: `‖ilr(x) − ilr(y)‖₂ == d_A(x, y)`
 - [x] La covarianza en CLR es singular (rango D−1), lo que justifica modelar en ILR
-- [ ] Contrastado contra `composition-stats` ← pendiente, requiere el entorno creado
+- [x] Contrastado contra `composition-stats` (`tests/test_composicional_vs_libreria.py`)
 
 ---
 
