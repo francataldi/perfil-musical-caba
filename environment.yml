@@ -1,0 +1,76 @@
+# Entorno del proyecto. Reconstruible con:
+#     conda env create -f environment.yml
+#     conda activate musica-caba
+#     playwright install chromium
+#
+# Las versiones se fijan por MINOR (>=x.y,<x.z) y no exactas: exacto rompe al
+# reconstruir en otra plataforma, suelto rompe silenciosamente cuando una
+# librería cambia comportamiento. El pin por minor es el punto medio habitual.
+
+name: musica-caba
+
+channels:
+  - conda-forge
+
+dependencies:
+  - python=3.11
+
+  # ─── Núcleo numérico ───────────────────────────────────────────────────
+  - numpy>=1.26,<2.1
+  - scipy>=1.11        # optimize: log-verosimilitud Dirichlet (M2, Etapa 7)
+  - pandas>=2.1
+  - pyarrow>=14        # backend parquet de data/
+
+  # ─── Geoespacial (Etapa 2) ─────────────────────────────────────────────
+  - geopandas>=0.14
+  - shapely>=2.0
+  - pyproj>=3.6        # reproyección EPSG:4326 -> EPSG:5347
+  - fiona>=1.9         # lectura de shapefiles
+  - mapclassify>=2.6   # clasificación de cortes para mapas coropléticos
+  - contextily>=1.5    # basemap de fondo en los mapas de control
+
+  # ─── Análisis espacial (Etapas 2, 6 y 7) ───────────────────────────────
+  - libpysal>=4.9      # matriz de contigüidad queen -> W
+  - esda>=2.5          # I de Moran sobre residuos
+  - spopt>=0.6         # regionalización con restricción de contigüidad
+
+  # ─── Modelado (Etapa 7) ────────────────────────────────────────────────
+  - scikit-learn>=1.4
+  - statsmodels>=0.14  # modelos multinivel -> ICC
+
+  # ─── Visualización (Etapas 5 y 8) ──────────────────────────────────────
+  - matplotlib>=3.8
+  - seaborn>=0.13
+  - plotly>=5.18       # diagramas ternarios
+
+  # ─── Adquisición (Etapa 1) ─────────────────────────────────────────────
+  - requests>=2.31
+  - httpx>=0.26
+  - beautifulsoup4>=4.12
+  - lxml>=5.0
+  - playwright>=1.41   # scraping con navegador; solo en scripts/, NO en Jupyter
+  - rapidfuzz>=3.6     # fuzzy matching de nombres de venue
+  - unidecode>=1.3     # normalización de strings antes del matching
+
+  # ─── Configuración y secretos ──────────────────────────────────────────
+  - pyyaml>=6.0        # config/taxonomia_generos.yaml
+  - python-dotenv>=1.0 # lectura de .env (claves de Spotify, Google Places)
+
+  # ─── Producto (Etapa 9) ────────────────────────────────────────────────
+  - streamlit>=1.31
+  - folium>=0.15
+
+  # ─── Desarrollo ────────────────────────────────────────────────────────
+  - jupyterlab>=4.0
+  - ipykernel>=6.29
+  - pytest>=8.0
+  - ruff>=0.3
+
+  - pip
+  - pip:
+      # Verificación externa de CLR/ILR (gate de la Etapa 5). Se usa
+      # composition-stats y no scikit-bio porque scikit-bio no publica ruedas
+      # para Windows y la instalación desde fuente falla sin toolchain de C.
+      - composition-stats>=2.0
+      - spotipy>=2.23        # cliente de la Spotify Web API (Etapa 3)
+      - musicbrainzngs>=0.7  # fallback para artistas locales (Etapa 3)

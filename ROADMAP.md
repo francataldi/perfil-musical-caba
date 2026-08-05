@@ -7,9 +7,9 @@
 > **Regla de oro:** no se avanza de etapa sin cumplir el gate. Si un gate falla, no se
 > parchea: se degrada el diseño y se documenta el cambio.
 
-**Última actualización:** 2026-08-01
+**Última actualización:** 2026-08-05
 **Etapa actual:** 5 — EDA composicional (adelantada; no depende de tener datos)
-**Próximo paso:** `src/composicional.py` — CLR / ILR / distancia de Aitchison, con TDD
+**Próximo paso:** verificar CLR/ILR contra `composition-stats` y arrancar las visualizaciones
 
 ---
 
@@ -114,24 +114,27 @@
 
 **Entregables:** `src/composicional.py` (con tests), `notebooks/03_eda_composicional.ipynb`
 
-- [ ] `clr()` y `clr_inv()` implementados a mano
-- [ ] SBP elegida con criterio sustantivo (balances interpretables)
-- [ ] Base ortonormal ILR construida desde la SBP
-- [ ] `ilr()` e `ilr_inv()` implementados a mano
-- [ ] `distancia_aitchison()` implementada
-- [ ] `centro()` — media geométrica cerrada
-- [ ] `matriz_variacion()` — el sustituto correcto de la correlación de Pearson
+- [x] `closure()`, `geometric_mean()`, `center()` implementados a mano
+- [x] `perturbation()` (⊕) y `powering()` (⊙), las operaciones del símplex
+- [x] `clr()` y `clr_inv()` implementados a mano
+- [x] SBP elegida con criterio sustantivo — 7 balances interpretables en `SBP_GENRES`
+- [x] Base ortonormal ILR construida desde la SBP (`ilr_basis_from_sbp`)
+- [x] `ilr()` e `ilr_inv()` implementados a mano
+- [x] `aitchison_distance()` implementada
+- [x] `variation_matrix()` — el sustituto correcto de la correlación de Pearson
 - [ ] Biplot composicional (PCA sobre CLR)
 - [ ] Diagramas ternarios de subcomposiciones
 - [ ] Dendrograma de barrios con distancia de Aitchison
 - [ ] Narrativa escrita en primera persona
 
-**Gate de salida — `tests/test_composicional.py`**
-- [ ] `ilr_inv(ilr(x)) == x` a tolerancia numérica
-- [ ] La base es ortonormal: `Vᵀ V = I`
-- [ ] La distancia de Aitchison es invariante ante perturbación
-- [ ] El cierre preserva las razones entre partes
-- [ ] Contrastado contra `composition_stats` o `scikit-bio`
+**Gate de salida — `tests/test_composicional.py`** (44 tests, todos pasando)
+- [x] `ilr_inv(ilr(x)) == x` a tolerancia numérica
+- [x] La base es ortonormal: `Vᵀ V = I`
+- [x] La distancia de Aitchison es invariante ante perturbación
+- [x] El cierre preserva las razones entre partes
+- [x] ILR es una isometría: `‖ilr(x) − ilr(y)‖₂ == d_A(x, y)`
+- [x] La covarianza en CLR es singular (rango D−1), lo que justifica modelar en ILR
+- [ ] Contrastado contra `composition-stats` ← pendiente, requiere el entorno creado
 
 ---
 
@@ -191,7 +194,8 @@
 
 - [ ] `README.md` completo: una oración → hallazgo con número → gráfico → reproducción →
       **limitaciones** → metodología
-- [ ] `environment.yml` reproducible
+- [x] `environment.yml` reproducible (entorno `musica-caba`)
+- [x] `pyproject.toml` con configuración de pytest y ruff
 - [ ] `.env.example` con los nombres de las claves necesarias
 - [ ] `app/dashboard.py` — Streamlit, mapa interactivo con selector de trimestre
 - [ ] Todos los tests pasando

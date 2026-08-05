@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>El símplex no es un espacio vectorial · Etapa 5</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;900&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root{
+  --ink:#0E1226;
+  --ink-2:#171C3A;
+  --line:#2C3360;
+  --paper:#E9E7F2;
+  --muted:#8E93BE;
+  --ok:#3FD9C0;
+  --bad:#FF5C7A;
+  --warm:#F2B441;
+}
+*{box-sizing:border-box}
+body{
+  margin:0; background:var(--ink); color:var(--paper);
+  font-family:"Archivo",system-ui,sans-serif; line-height:1.55;
+  padding:clamp(20px,4vw,56px);
+}
+.wrap{max-width:1180px;margin:0 auto}
+header{border-bottom:1px solid var(--line);padding-bottom:22px;margin-bottom:34px}
+.eyebrow{font-family:"IBM Plex Mono",monospace;font-size:12px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--muted)}
+h1{font-weight:900;font-size:clamp(28px,4.6vw,50px);line-height:1.02;margin:10px 0 12px;
+  letter-spacing:-.02em}
+h1 em{font-style:normal;color:var(--warm)}
+.sub{color:var(--muted);max-width:62ch;font-size:15px}
+.grid{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:38px;align-items:start}
+@media(max-width:880px){.grid{grid-template-columns:1fr}}
+.panel{background:var(--ink-2);border:1px solid var(--line);border-radius:4px;padding:22px}
+h2{font-size:13px;font-family:"IBM Plex Mono",monospace;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted);margin:0 0 16px;font-weight:500}
+.slider-row{display:grid;grid-template-columns:64px 1fr 58px;align-items:center;gap:12px;margin-bottom:10px}
+.slider-row label{font-family:"IBM Plex Mono",monospace;font-size:13px;letter-spacing:.06em}
+.slider-row output{font-family:"IBM Plex Mono",monospace;font-size:13px;color:var(--muted);text-align:right}
+input[type=range]{width:100%;accent-color:var(--warm);background:transparent}
+.tag{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:7px;vertical-align:middle}
+.ops{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+button{font-family:"IBM Plex Mono",monospace;font-size:12.5px;letter-spacing:.04em;
+  background:transparent;color:var(--paper);border:1px solid var(--line);
+  padding:9px 13px;border-radius:3px;cursor:pointer;transition:.15s}
+button:hover{border-color:var(--warm);color:var(--warm)}
+button.active{background:var(--warm);color:var(--ink);border-color:var(--warm)}
+button:focus-visible{outline:2px solid var(--ok);outline-offset:2px}
+.readout{font-family:"IBM Plex Mono",monospace;font-size:13px;margin-top:20px;
+  border-top:1px solid var(--line);padding-top:16px}
+.readout .line{display:flex;justify-content:space-between;padding:4px 0}
+.verdict{margin-top:14px;padding:12px 14px;border-radius:3px;font-size:13.5px;
+  font-family:"IBM Plex Mono",monospace;line-height:1.5}
+.verdict.in{background:rgba(63,217,192,.1);border-left:3px solid var(--ok);color:var(--ok)}
+.verdict.out{background:rgba(255,92,122,.1);border-left:3px solid var(--bad);color:var(--bad)}
+svg{width:100%;height:auto;display:block}
+.note{color:var(--muted);font-size:13.5px;margin-top:24px;max-width:64ch}
+.note strong{color:var(--paper);font-weight:600}
+footer{margin-top:46px;border-top:1px solid var(--line);padding-top:18px;
+  font-family:"IBM Plex Mono",monospace;font-size:12px;color:var(--muted)}
+@media (prefers-reduced-motion: reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Etapa 5 · Estadística composicional · Concepto 1 de 5</div>
+  <h1>Salirse del triángulo:<br>por qué el símplex <em>no</em> es un espacio vectorial</h1>
+  <p class="sub">Tomo una subcomposición de 3 macrogéneros de un barrio-trimestre. Todo lo que suma 1 vive
+  dentro del triángulo. Probá cada operación y mirá si el resultado se queda adentro o se escapa.</p>
+</header>
+
+<div class="grid">
+  <div class="panel">
+    <h2>El símplex S³</h2>
+    <svg viewBox="0 0 520 470" id="plot" role="img" aria-label="Diagrama ternario con la composición x y el resultado de la operación aplicada"></svg>
+  </div>
+
+  <div>
+    <div class="panel">
+      <h2>Composición x (barrio-trimestre)</h2>
+      <div class="slider-row">
+        <label><span class="tag" style="background:#F2B441"></span>TANG</label>
+        <input type="range" id="s0" min="1" max="98" value="20">
+        <output id="o0"></output>
+      </div>
+      <div class="slider-row">
+        <label><span class="tag" style="background:#7C8CFF"></span>ROCK</label>
+        <input type="range" id="s1" min="1" max="98" value="50">
+        <output id="o1"></output>
+      </div>
+      <div class="slider-row">
+        <label><span class="tag" style="background:#3FD9C0"></span>TROP</label>
+        <input type="range" id="s2" min="1" max="98" value="30">
+        <output id="o2"></output>
+      </div>
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);margin:14px 0 0">
+        Los valores se re-normalizan solos: siempre suman 1. Eso es el <em>cierre</em>.
+      </p>
+    </div>
+
+    <div class="panel" style="margin-top:20px">
+      <h2>Aplicar una operación</h2>
+      <div class="ops" id="ops">
+        <button data-op="none" class="active">sin operación</button>
+        <button data-op="scal">2 · x &nbsp;(escalar euclídeo)</button>
+        <button data-op="pow">2 ⊙ x &nbsp;(powering)</button>
+        <button data-op="add">x + y &nbsp;(suma euclídea)</button>
+        <button data-op="pert">x ⊕ y &nbsp;(perturbación)</button>
+      </div>
+      <p style="font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--muted);margin:14px 0 0">
+        y = (0.60, 0.30, 0.10) — el vector fijo con el que opero.
+      </p>
+
+      <div class="readout" id="readout"></div>
+      <div class="verdict" id="verdict"></div>
+    </div>
+  </div>
+</div>
+
+<p class="note"><strong>Lo que hay que mirar.</strong> No mires solo si el punto se sale.
+Mirá también <em>a dónde</em> va cuando se queda adentro: ⊙ mueve el punto a lo largo de una
+curva que se acerca al vértice sin llegar nunca, y ⊕ nunca lo empuja contra un lado.
+Los bordes del triángulo (donde algún género vale 0) están infinitamente lejos en esta geometría.
+Esa es la razón por la que un cero rompe todo en la Etapa 4.</p>
+
+<footer>Perfil musical de los barrios de CABA · material de estudio, Etapa 5</footer>
+</div>
+
+<script>
+const V=[[260,40],[40,430],[480,430]]; // vértices: TANG, ROCK, TROP
+const COL=["#F2B441","#7C8CFF","#3FD9C0"];
+const NAMES=["TANG","ROCK","TROP"];
+const y=[0.60,0.30,0.10];
+let op="none";
+
+const bary=(v)=>{ // v en coords baricéntricas (no necesariamente suma 1)
+  let x=0,yy=0;
+  for(let i=0;i<3;i++){x+=v[i]*V[i][0];yy+=v[i]*V[i][1];}
+  return [x,yy];
+};
+const closure=(v)=>{const s=v.reduce((a,b)=>a+b,0);return v.map(a=>a/s);};
+
+function currentX(){
+  const raw=[+s0.value,+s1.value,+s2.value];
+  return closure(raw);
+}
+function applyOp(x){
+  if(op==="none") return {v:x,label:"x"};
+  if(op==="scal") return {v:x.map(a=>2*a),label:"2 · x"};
+  if(op==="pow")  return {v:closure(x.map(a=>Math.pow(a,2))),label:"2 ⊙ x"};
+  if(op==="add")  return {v:x.map((a,i)=>a+y[i]),label:"x + y"};
+  if(op==="pert") return {v:closure(x.map((a,i)=>a*y[i])),label:"x ⊕ y"};
+}
+
+function inSimplex(v){
+  const s=v.reduce((a,b)=>a+b,0);
+  return Math.abs(s-1)<1e-9 && v.every(a=>a>0);
+}
+
+function draw(){
+  const x=currentX();
+  const r=applyOp(x);
+  const px=bary(x), pr=bary(r.v);
+
+  let s='';
+  // plano ambiente
+  s+=`<rect x="0" y="0" width="520" height="470" fill="none"/>`;
+  // triángulo
+  s+=`<polygon points="${V.map(p=>p.join(',')).join(' ')}" fill="#171C3A" stroke="#2C3360" stroke-width="1.5"/>`;
+  // grilla
+  for(let k=1;k<5;k++){
+    const t=k/5;
+    for(let i=0;i<3;i++){
+      const a=(i+1)%3,b=(i+2)%3;
+      const p1=[V[i][0]+(V[a][0]-V[i][0])*t, V[i][1]+(V[a][1]-V[i][1])*t];
+      const p2=[V[i][0]+(V[b][0]-V[i][0])*t, V[i][1]+(V[b][1]-V[i][1])*t];
+      s+=`<line x1="${p1[0]}" y1="${p1[1]}" x2="${p2[0]}" y2="${p2[1]}" stroke="#2C3360" stroke-width=".6" opacity=".55"/>`;
+    }
+  }
+  // vértices
+  V.forEach((p,i)=>{
+    const dy=i===0?-14:22, dx=i===1?-4:(i===2?4:0);
+    s+=`<circle cx="${p[0]}" cy="${p[1]}" r="4" fill="${COL[i]}"/>`;
+    s+=`<text x="${p[0]+dx}" y="${p[1]+dy}" fill="${COL[i]}" font-family="IBM Plex Mono, monospace" font-size="13" text-anchor="${i===1?'end':(i===2?'start':'middle')}">${NAMES[i]}</text>`;
+  });
+
+  // flecha x -> resultado
+  if(op!=="none"){
+    s+=`<line x1="${px[0]}" y1="${px[1]}" x2="${pr[0]}" y2="${pr[1]}"
+         stroke="${inSimplex(r.v)?'#3FD9C0':'#FF5C7A'}" stroke-width="1.6" stroke-dasharray="5 4"/>`;
+  }
+  // punto x
+  s+=`<circle cx="${px[0]}" cy="${px[1]}" r="7" fill="none" stroke="#E9E7F2" stroke-width="2"/>`;
+  s+=`<text x="${px[0]+12}" y="${px[1]-9}" fill="#E9E7F2" font-family="IBM Plex Mono, monospace" font-size="12">x</text>`;
+  // resultado
+  if(op!=="none"){
+    const c=inSimplex(r.v)?'#3FD9C0':'#FF5C7A';
+    s+=`<circle cx="${pr[0]}" cy="${pr[1]}" r="7" fill="${c}"/>`;
+    s+=`<text x="${pr[0]+12}" y="${pr[1]+16}" fill="${c}" font-family="IBM Plex Mono, monospace" font-size="12">${r.label}</text>`;
+  }
+  document.getElementById("plot").innerHTML=s;
+
+  // readouts
+  o0.textContent=x[0].toFixed(3); o1.textContent=x[1].toFixed(3); o2.textContent=x[2].toFixed(3);
+  const sum=r.v.reduce((a,b)=>a+b,0);
+  document.getElementById("readout").innerHTML=
+    `<div class="line"><span>${r.label}</span><span>(${r.v.map(a=>a.toFixed(3)).join(', ')})</span></div>`+
+    `<div class="line"><span>suma de las partes</span><span>${sum.toFixed(3)}</span></div>`;
+
+  const vd=document.getElementById("verdict");
+  if(op==="none"){vd.className="verdict in";vd.textContent="x está en el símplex. Suma 1, todas las partes positivas.";}
+  else if(inSimplex(r.v)){vd.className="verdict in";vd.textContent="Sigue adentro. La operación es cerrada en el símplex: el resultado también es una composición.";}
+  else {vd.className="verdict out";vd.textContent="Se salió. El resultado suma "+sum.toFixed(3)+", así que ya no es una composición. La operación no está definida acá.";}
+}
+
+["s0","s1","s2"].forEach(id=>document.getElementById(id).addEventListener("input",draw));
+document.querySelectorAll("#ops button").forEach(b=>{
+  b.addEventListener("click",()=>{
+    document.querySelectorAll("#ops button").forEach(o=>o.classList.remove("active"));
+    b.classList.add("active"); op=b.dataset.op; draw();
+  });
+});
+draw();
+</script>
+</body>
+</html>

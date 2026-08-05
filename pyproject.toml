@@ -1,0 +1,23 @@
+# Configuración de herramientas del proyecto.
+# Las dependencias NO viven acá: viven en environment.yml, porque el entorno se
+# gestiona con conda (geopandas y sus dependencias binarias se instalan mucho
+# mejor desde conda-forge que desde pip).
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+# Agrega la raíz del repo al sys.path para que "from src.composicional import ..."
+# funcione sin instalar el paquete ni tocar PYTHONPATH.
+pythonpath = ["."]
+addopts = "-q --strict-markers"
+
+[tool.ruff]
+line-length = 88
+target-version = "py311"
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "UP", "B"]
+# E501 (línea larga) lo maneja el formateador; no hace falta que además falle el lint.
+ignore = ["E501"]
+
+[tool.ruff.format]
+docstring-code-format = true
