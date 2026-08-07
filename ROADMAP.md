@@ -98,7 +98,22 @@
 
 - [x] ≥ 85 % de eventos geocodificados
 - [x] Mapa de control inspeccionado visualmente
-- [ ] Top 30 venues verificados **a mano** ← pendiente, es la parte tediosa e innegociable
+- [x] Diagnósticos automáticos de venues (`scripts/03_verificar_venues.py`)
+- [ ] Top 30 venues verificados **a mano** ← Franco completa `data/interim/verificacion_venues.csv`
+
+> **Los 30 venues más frecuentes concentran 4.070 de 5.315 eventos: el 76,6 %.**
+> Verificarlos cubre tres cuartos del riesgo de error de toda la etapa.
+>
+> **Hallazgo mayor:** la Usina del Arte sola tiene **1.315 eventos, el 24,7 % del total**.
+> El "perfil musical de La Boca" es, en los hechos, la programación de un único centro
+> cultural municipal. Es un problema de validez, no de datos: va a la sección de
+> limitaciones y hay que decidir cómo tratarlo antes de modelar.
+>
+> Duplicados de nombre detectados que hay que fusionar antes de la Etapa 4:
+> `CENTRO CULTURAL SAN MARTIN` / `CENTRO CULTURAL GENERAL SAN MARTIN` (182 eventos),
+> `CENTRO CULTURAL ADAN BUENOSAYRES` / `... BUENOS AIRES` (65),
+> `TEATRO MONTE VIEJO` / `TEATRO MONTEVIEJO`,
+> `ESPACIO CULTURAL JULIAN CENTEYA` / `CENTRO CULTURAL JULIAN CENTEYA`.
 
 > **Hallazgos de esta etapa:**
 > - El control cruzado dio 71,8 % en la primera corrida. Investigado: 1.310 de los 1.458
