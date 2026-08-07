@@ -11,7 +11,7 @@ disco. Todo eso vive en scripts/.
 """
 
 import hashlib
-from datetime import datetime, timezone
+from datetime import UTC, datetime
 
 import pandas as pd
 
@@ -93,7 +93,7 @@ def marca_de_tiempo_de_scraping():
     --------
     datetime naive en UTC (sin tzinfo), compatible con datetime64[ns] de parquet.
     """
-    return datetime.now(timezone.utc).replace(tzinfo=None)
+    return datetime.now(UTC).replace(tzinfo=None)
 
 
 def dataframe_evento_vacio():

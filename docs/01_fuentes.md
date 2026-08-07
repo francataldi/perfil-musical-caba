@@ -14,10 +14,10 @@
 
 ## Tabla de inventario
 
-| Fuente | Método | Key | Cobertura **real** | Coords | Barrio | Eventos de música (est.) | Estado |
+| Fuente | Método | Key | Cobertura **real** | Coords | Barrio | Eventos de música | Estado |
 |---|---|---|---|---|---|---|---|
-| BA Data — `actividades-culturales` | API CKAN + CSV | no | 2017–2022, parcial | sí | sí | ~150–200 | ✅ verificada |
-| BA Data — `eventos-direccion-general-musica` | CSV | no | solo 2017 | sí | sí | 80 | ✅ verificada |
+| BA Data — `actividades-culturales` | API CKAN + CSV | no | 2018–2022 | 98,5 % | sí | **5.397** (4.550 sin 2020-21) | ✅ **descargada** |
+| BA Data — `eventos-direccion-general-musica` | CSV | no | solo 2017 | sí | sí | 80 | ✅ verificada, no usada |
 | BA Data — `espacios-culturales` | API CKAN + CSV | no | padrón vigente | sí | sí | — (venues, no eventos) | 🔍 sin explorar |
 | Alternativa Teatral | scraping HTML | no | archivo histórico por sala | no | no | **a medir** | 🔍 sondeo pendiente |
 | Songkick | API oficial | **sí** | histórico por venue | sí | no | a medir | ⏳ key solicitada |
@@ -71,14 +71,54 @@ Lo relevante:
 - `fecha_ini` / `fecha_fin`: **ojo, muchas filas son actividades de larga duración**
   (una muestra de tres meses), no eventos puntuales. Decisión pendiente en el Paso 3.
 
-**Volumen medido:** 2019 tiene 275 filas totales, ~40–50 de música, **todas de enero**
-(programación de verano). 2022 tiene ~600 filas cubriendo ago-2021 a oct-2022.
+### Volumen real, medido descargando los archivos completos
 
-> ⚠️ **Este dataset no es la agenda cultural de la ciudad.** Es la programación propia del
-> Ministerio de Cultura: ciclos de verano, actividades gratuitas, espacios públicos.
-> Sobrerrepresenta lo gratuito y estatal, y **omite por completo el circuito comercial**
-> (Niceto, La Trastienda, clubes, milongas privadas, peñas). Esto es sesgo sistemático,
-> no ruido, y va derecho a la sección de limitaciones del README.
+| Año | Filas totales | De música | Con fecha y venue | Columna disciplina | Columna fecha | `fecha_fin` |
+|---|---|---|---|---|---|---|
+| 2017 | 752 | — | — | *no tiene* | *no tiene* | no |
+| 2018 | 11.920 | 1.574 | 1.449 | `disciplina_artistica` | `fecha_inicio` | no |
+| 2019 | 15.066 | 2.129 | 2.117 | `disciplina_artistica` | `fecha_inicio` | no |
+| 2020 | 5.682 | 755 | 650 | `disciplina` | `fecha_ini` | sí |
+| 2021 | 2.920 | 502 | 392 | `disciplina` | `fecha_ini` | sí |
+| 2022 | 15.007 | 1.337 | 1.269 | `disciplina` | `fecha_ini` | sí |
+
+**Resultado tras deduplicar: 5.397 eventos de música (2018-01 a 2022-12), 466 venues
+distintos, 98,5 % con coordenadas.** Excluyendo 2020–2021: **4.550 eventos, 36 meses,
+45 barrios**. El gate de la Etapa 1 se cumple con esta sola fuente.
+
+> ⚠️ **Corrección registrada (2026-08-05).** La primera estimación de este documento decía
+> "~150–200 eventos de música". Estaba mal por un factor de 25: se había estimado leyendo
+> un *preview* del CSV en vez de descargar el archivo. **Lección: nunca estimes el volumen
+> de una fuente desde un preview. Bajá el archivo y contá.**
+
+### Trampas del dataset, verificadas al descargarlo
+
+1. **El esquema cambia entre años.** 2018–2019 usan `disciplina_artistica`,
+   `fecha_inicio` y `establecimiento`; 2020–2022 usan `disciplina`, `fecha_ini`,
+   `fecha_fin` y `lugar`. Es la misma serie con nombres distintos. Se resuelve con el
+   diccionario `NOMBRES_ALTERNATIVOS_POR_CAMPO` del script.
+2. **`'barrio '` en 2019 tiene un espacio al final del nombre de la columna.**
+   `df["barrio"]` tira `KeyError` y el espacio es invisible al imprimir las columnas.
+3. **Los archivos anuales se solapan.** El de 2019 llega hasta diciembre de 2020 y el de
+   2022 arranca en enero de 2021: 480 eventos aparecen dos veces.
+4. **La columna `id` es un número de fila** (1, 2, 3, … N), no un identificador estable.
+   Si el GCBA republica el archivo reordenado, todos los ids cambian. Por eso el hash del
+   proyecto se construye del contenido (`fecha` + `titulo` + `venue`), no de esa columna.
+5. **Los faltantes vienen como el string `"NA"`**, no como campo vacío.
+
+### Sesgos conocidos de esta fuente
+
+> **No es la agenda cultural de la ciudad.** Es la programación propia del Ministerio de
+> Cultura: ciclos, actividades gratuitas, espacios públicos y estatales. Sobrerrepresenta
+> lo gratuito y estatal, y **omite el circuito comercial** (Niceto, La Trastienda, clubes,
+> milongas privadas, peñas). Es sesgo sistemático, no ruido: va a la sección de
+> limitaciones del README.
+
+**Concentración territorial a vigilar:** La Boca tiene 1.245 de los 4.550 eventos (27 %),
+casi con seguridad por la Usina del Arte. San Nicolás suma 619. Dos barrios concentran el
+41 % de la muestra. Esto va a dominar cualquier modelo si no se trata, y conecta
+directamente con el riesgo "Palermo/Recoleta aplastan la señal" del documento de
+especificación — solo que el barrio que aplasta resultó ser otro.
 
 ### `eventos-direccion-general-musica` — dataset de práctica
 

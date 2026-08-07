@@ -8,9 +8,9 @@
 > parchea: se degrada el diseño y se documenta el cambio.
 
 **Última actualización:** 2026-08-05
-**Etapa actual:** 1 — Adquisición
-**Próximo paso:** Franco implementa `scripts/01_descarga_ba_data.py` (esqueleto listo) y
-sondea el volumen del archivo histórico de Alternativa Teatral.
+**Etapa actual:** 2 — Geocodificación y asignación espacial
+**Próximo paso:** descargar el shapefile oficial de barrios y hacer el spatial join,
+usando `barrio_declarado_por_la_fuente` como control cruzado del point-in-polygon.
 
 **Entorno:** `musica-caba` creado desde `environment.yml`. Activar con
 `conda activate musica-caba`. Pendiente antes de la Etapa 1: `playwright install chromium`.
@@ -42,25 +42,34 @@ sondea el volumen del archivo histórico de Alternativa Teatral.
 
 - [x] `docs/01_fuentes.md` con la tabla de inventario y **volumen estimado por fuente**
 - [x] Esquema unificado `Evento` en `src/esquema.py` (`id` hash SHA-256 estable + `scraped_at`)
-- [ ] Fuente 1 — BA Data / `actividades-culturales` (esqueleto listo en `scripts/01_descarga_ba_data.py`)
-- [ ] Sondeo de volumen del archivo histórico de Alternativa Teatral
-- [ ] Fuente 2 — Alternativa Teatral (scraping HTML, la fuente de volumen)
+- [x] Fuente 1 — BA Data / `actividades-culturales` → `scripts/01_descarga_ba_data.py`
+- [ ] Fuente 2 — Alternativa Teatral (opcional: el gate ya se cumple sin ella)
 - [ ] Fuente 3 — Songkick, si llega la API key (solicitud pendiente)
-- [ ] Deduplicación entre fuentes + tasa de solapamiento reportada
+- [ ] Deduplicación entre fuentes + tasa de solapamiento reportada *(pendiente solo si se suma una segunda fuente)*
 
-> ⚠️ **Hallazgo del 2026-08-05:** BA Data aporta ~200 eventos de música (≈7% del gate) y
-> su serie termina en 2022. Es fuente de práctica y control de calidad, no de volumen.
-> El volumen depende del archivo histórico de Alternativa Teatral, todavía sin medir.
-> **Plan B decidido:** si no se llega a 3.000, se mantiene el objeto de estudio y se
-> degrada el grano temporal a semestral/anual, con enmienda al protocolo.
+**Gate de salida — ✅ CUMPLIDO con BA Data sola**
 
-**Gate de salida**
-- [ ] ≥ 3.000 eventos únicos tras deduplicación
-- [ ] ≥ 36 meses de cobertura temporal
-- [ ] ≥ 40 de los 48 barrios con al menos un evento
-- [ ] Los scripts corren de cero sin intervención manual
+| Criterio | Requerido | Obtenido |
+|---|---|---|
+| Eventos únicos | ≥ 3.000 | **4.550** |
+| Meses de cobertura | ≥ 36 | **36** |
+| Barrios con evento | ≥ 40 | **45** (declarado; se confirma en Etapa 2) |
+| Scripts sin intervención manual | sí | sí, idempotente verificado |
 
-> Si falla: degradar a panel semestral y anotarlo en el protocolo. No parchear.
+- [x] ≥ 3.000 eventos únicos tras deduplicación
+- [x] ≥ 36 meses de cobertura temporal
+- [x] ≥ 40 de los 48 barrios con al menos un evento
+- [x] Los scripts corren de cero sin intervención manual (2 corridas → 5.397 ambas)
+
+> **Datos obtenidos:** `data/raw/ba_data_actividades_20260805.parquet` — 5.397 eventos de
+> música 2018-2022 (4.550 excluyendo la pandemia), 466 venues, 98,5 % con coordenadas.
+>
+> **Sesgo conocido a documentar:** la fuente es programación del Ministerio de Cultura,
+> así que omite el circuito comercial. Y La Boca + San Nicolás concentran el 41 % de la
+> muestra. Ver `docs/01_fuentes.md`.
+>
+> Sumar Alternativa Teatral sigue siendo valioso para corregir el sesgo de circuito, pero
+> ya no es condición para avanzar.
 
 ---
 

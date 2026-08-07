@@ -27,8 +27,8 @@ import pytest
 from src.composicional import (
     GENRES,
     aitchison_distance,
-    clr,
     closure,
+    clr,
     ilr,
     project_ilr_basis,
 )
