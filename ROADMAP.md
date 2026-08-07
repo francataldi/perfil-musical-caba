@@ -8,9 +8,9 @@
 > parchea: se degrada el diseño y se documenta el cambio.
 
 **Última actualización:** 2026-08-05
-**Etapa actual:** 2 — Geocodificación y asignación espacial
-**Próximo paso:** descargar el shapefile oficial de barrios y hacer el spatial join,
-usando `barrio_declarado_por_la_fuente` como control cruzado del point-in-polygon.
+**Etapa actual:** 3 — Etiquetado de géneros (la de mayor riesgo del proyecto)
+**Próximo paso:** verificar a mano los top 30 venues (pendiente de la Etapa 2) y armar
+`config/taxonomia_generos.yaml`.
 
 **Entorno:** `musica-caba` creado desde `environment.yml`. Activar con
 `conda activate musica-caba`. Pendiente antes de la Etapa 1: `playwright install chromium`.
@@ -73,21 +73,42 @@ usando `barrio_declarado_por_la_fuente` como control cruzado del point-in-polygo
 
 ---
 
-## Etapa 2 — Geocodificación y asignación espacial ⬜
+## Etapa 2 — Geocodificación y asignación espacial ✅
 
-**Entregable:** `data/interim/eventos_geolocalizados.parquet` + notebook con mapa de control
+**Entregables:** `data/interim/eventos_geolocalizados.parquet`,
+`data/processed/bloques_cv.csv`, `data/interim/mapa_de_control.png`
+**Script:** `scripts/02_asignar_barrio.py`
 
-- [ ] Shapefile oficial de barrios descargado e inspeccionado (¿48 polígonos? ¿qué CRS?)
-- [ ] Cascada de geocodificación: USIG → Nominatim → manual
-- [ ] Spatial join *point-in-polygon* con GeoPandas
-- [ ] Tasa de geocodificación **por fuente** reportada
-- [ ] Matriz de contigüidad *queen* `W` calculada y persistida (se reusa en Etapas 6 y 7)
-- [ ] `data/processed/bloques_cv.csv` — los 5 bloques de CV espacial, persistidos
+- [x] GeoJSON oficial de barrios descargado e inspeccionado (48 polígonos, EPSG:4326)
+- [x] Spatial join *point-in-polygon* con GeoPandas (`predicate="within"`, `how="left"`)
+- [x] Control cruzado contra el barrio declarado por la fuente: **97,1 % de acuerdo**
+- [x] Matriz de contigüidad *queen* `W` calculada (5,2 vecinos promedio, sin islas)
+- [x] `data/processed/bloques_cv.csv` — bloques de CV espacial, contiguos, persistidos
+- [ ] Cascada de geocodificación USIG → Nominatim *(no hizo falta: BA Data ya trae
+      coordenadas para el 98,5 %. Queda pendiente si se suma una fuente sin coordenadas)*
 
-**Gate de salida**
-- [ ] ≥ 85 % de eventos geocodificados
-- [ ] Top 30 venues verificados **a mano**
-- [ ] Mapa de control inspeccionado visualmente
+**Gate de salida — ✅ CUMPLIDO**
+
+| Criterio | Requerido | Obtenido |
+|---|---|---|
+| Eventos geocodificados | ≥ 85 % | **98,5 %** |
+| Barrios con evento (panel) | ≥ 40 | **43** |
+| Eventos dentro de CABA | — | 5.315 de 5.315 (100 %) |
+| Mapa de control inspeccionado | sí | sí, 3 paneles |
+
+- [x] ≥ 85 % de eventos geocodificados
+- [x] Mapa de control inspeccionado visualmente
+- [ ] Top 30 venues verificados **a mano** ← pendiente, es la parte tediosa e innegociable
+
+> **Hallazgos de esta etapa:**
+> - El control cruzado dio 71,8 % en la primera corrida. Investigado: 1.310 de los 1.458
+>   desacuerdos eran **diferencias de nomenclatura**, no errores espaciales — el shapefile
+>   dice `LA BOCA` y los CSV del GCBA dicen `BOCA`. Con el mapa de alias, 97,1 %.
+>   El número era un diagnóstico, no un veredicto.
+> - Con 5 bloques de CV el más chico quedaba con 4 barrios (< 6). Se aplicó la regla ya
+>   escrita en el protocolo y **el esquema final usa 4 bloques** (17, 16, 9, 6).
+> - Ningún evento cayó fuera de CABA, coherente con que la fuente sea programación
+>   municipal. Cuando se sume una fuente comercial habrá que volver a mirar esto.
 
 ---
 

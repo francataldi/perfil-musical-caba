@@ -181,6 +181,11 @@ no "los agrupo a ojo":
    partido en dos pedazos.
 4. Se verifica que ningún bloque tenga menos de 6 barrios (si lo tiene, el fold es
    demasiado chico para estimar error). Si pasa, se baja a 4 bloques.
+
+   > **Resultado registrado (2026-08-05):** con 5 bloques el más chico quedó con 4
+   > barrios, así que se aplicó la regla y **el esquema final usa 4 bloques**, de
+   > tamaños 17, 16, 9 y 6. La regla estaba escrita antes de correr el clustering,
+   > así que la decisión no dependió del resultado.
 5. La asignación resultante se **persiste** en `data/processed/bloques_cv.csv` y se
    commitea. No se recalcula en cada corrida: si cambia la partición, cambian los
    resultados, y eso los volvería incomparables entre sí.
