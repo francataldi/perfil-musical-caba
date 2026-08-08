@@ -99,7 +99,26 @@
 - [x] ≥ 85 % de eventos geocodificados
 - [x] Mapa de control inspeccionado visualmente
 - [x] Diagnósticos automáticos de venues (`scripts/03_verificar_venues.py`)
-- [ ] Top 30 venues verificados **a mano** ← Franco completa `data/interim/verificacion_venues.csv`
+- [x] Top 30 venues verificados por **dos métodos independientes**
+      (`scripts/04_verificar_venues_con_geocoder.py`)
+
+**Verificación de venues — 93 % del top 30 confirmado**
+
+| Método | Venues | Eventos | Qué detecta |
+|---|---|---|---|
+| Manual (Franco) | 9 | 2.955 (72,6 %) | nombres que agrupan varias sedes |
+| Geocoder Nominatim | 21 | 1.115 (27,4 %) | coordenadas mal puestas |
+| **Confirmados** | — | **3.785 (93,0 %)** | |
+| Pendientes | 5 | 285 (7,0 %) | |
+
+La columna `metodo_de_verificacion` distingue ambos: una celda verificada por el geocoder
+**no** cuenta como verificada a mano. Los dos métodos fallan en casos distintos, así que
+no son intercambiables.
+
+Pendientes (285 eventos, 7 %): `ANFITEATRO EVA PERON` (esquina sin altura),
+`ESPACIO CULTURAL RESURGIMIENTO` y `MARCO DEL PONT` (formato catastral que Nominatim no
+resuelve), `PARQUE DE LA CIUDAD` y `CENTRO CULTURAL ADAN BUENOS AIRES` (Nominatim los
+ubica mal: 6 km y 506 m de la coordenada de BA Data respectivamente).
 
 > **Los 30 venues más frecuentes concentran 4.070 de 5.315 eventos: el 76,6 %.**
 > Verificarlos cubre tres cuartos del riesgo de error de toda la etapa.
@@ -108,6 +127,16 @@
 > El "perfil musical de La Boca" es, en los hechos, la programación de un único centro
 > cultural municipal. Es un problema de validez, no de datos: va a la sección de
 > limitaciones y hay que decidir cómo tratarlo antes de modelar.
+>
+> **Casos ambiguos, resueltos e investigados (2026-08-05):**
+> - `MUSEO SIVORI` — la alerta de 323 m era ruido de geocodificación sobre una única
+>   dirección (Infanta Isabel Av. 555). Los 36 eventos cayeron en Palermo. Sin acción.
+> - `PARQUE DE LA CIUDAD` — 33 eventos con dos accesos reales, uno de cada lado del
+>   límite Lugano/Soldati (Av. Escalada 4501 → 32 eventos en Lugano;
+>   Av. F. Fernández de la Cruz 4000 → 1 evento en Soldati). **Se deja como está:** el
+>   barrio es propiedad de dónde ocurrió el evento, no del nombre del venue, y el
+>   point-in-polygon por evento ya aplica el criterio correcto y homogéneo. Es el MAUP
+>   en miniatura y afecta a 1 evento sobre 5.315.
 >
 > Duplicados de nombre detectados que hay que fusionar antes de la Etapa 4:
 > `CENTRO CULTURAL SAN MARTIN` / `CENTRO CULTURAL GENERAL SAN MARTIN` (182 eventos),
