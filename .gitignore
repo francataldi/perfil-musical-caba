@@ -1,53 +1,35 @@
-# ─── Python ──────────────────────────────────────────────────────────
 __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
 .ruff_cache/
 
-# Entornos virtuales (el entorno se reconstruye desde environment.yml)
 .venv/
 venv/
 env/
 
-# ─── Jupyter ─────────────────────────────────────────────────────────
 .ipynb_checkpoints/
 */.ipynb_checkpoints/*
 
-# ─── Secretos ────────────────────────────────────────────────────────
-# Claves de Spotify, Google Places, etc. NUNCA se commitean.
-# Se versiona .env.example con los nombres de las variables y valores vacios.
 .env
 .env.*
 !.env.example
 *.key
 credentials.json
 
-# ─── Datos ───────────────────────────────────────────────────────────
-# DECISION (2026-08-01): raw/ se ignora, interim/ y processed/ se versionan.
-# Motivo: raw/ es voluminoso y reconstruible corriendo scripts/ (idempotentes).
-# interim/ y processed/ se versionan para que el repo sea reproducible desde
-# la Etapa 4 sin re-scrapear 20 minutos contra fuentes que pueden cambiar o caerse.
-# Contrapartida asumida: parquets binarios en git, sin diff legible.
 data/raw/*
 !data/raw/.gitkeep
 
-# Artefactos pesados de modelos: se regeneran, no se versionan.
 *.pkl
 *.joblib
 *.h5
 
-# ─── Sistema operativo ───────────────────────────────────────────────
 Thumbs.db
 desktop.ini
 .DS_Store
 
-# ─── Meta de trabajo (local, no forma parte del proyecto) ────────────
-# Instrucciones sobre como quiero que me responda el asistente + datos
-# personales. No aporta nada a quien lea el repo.
-docs/instrucciones_mentor.md
+docs/instrucciones_*.md
 
-# ─── Herramientas / IDE ──────────────────────────────────────────────
 .claude/
 .vscode/
 .idea/
