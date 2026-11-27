@@ -177,7 +177,7 @@ así que sobrerrepresenta salas y centros culturales por sobre bares, clubes y b
 
 **API oficial**, requiere key. La solicitud tarda **hasta 30 días hábiles**.
 
-- **Solicitada el:** _(completar cuando Franco aplique)_
+- **Solicitada el:** _(completar al pedirla)_
 - **Reclamar a partir del:** _(30 días hábiles después)_
 
 Decisión tomada: se aplica y se sigue sin ella. El proyecto no depende de esta fuente.

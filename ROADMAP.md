@@ -7,7 +7,8 @@
 > **Regla de oro:** no se avanza de etapa sin cumplir el gate. Si un gate falla, no se
 > parchea: se degrada el diseño y se documenta el cambio.
 
-**Última actualización:** 2026-08-05
+**Última actualización:** 2026-08-07
+**Estado:** en pausa
 **Etapa actual:** 3 — Etiquetado de géneros (la de mayor riesgo del proyecto)
 **Próximo paso:** verificar a mano los top 30 venues (pendiente de la Etapa 2) y armar
 `config/taxonomia_generos.yaml`.
@@ -36,7 +37,7 @@
 
 ---
 
-## Etapa 1 — Adquisición ⬜
+## Etapa 1 — Adquisición ✅
 
 **Entregables:** `data/raw/eventos_YYYYMMDD.parquet`, `scripts/`, `docs/01_fuentes.md`
 
@@ -106,7 +107,7 @@
 
 | Método | Venues | Eventos | Qué detecta |
 |---|---|---|---|
-| Manual (Franco) | 9 | 2.955 (72,6 %) | nombres que agrupan varias sedes |
+| Manual | 9 | 2.955 (72,6 %) | nombres que agrupan varias sedes |
 | Geocoder Nominatim | 21 | 1.115 (27,4 %) | coordenadas mal puestas |
 | **Confirmados** | — | **3.785 (93,0 %)** | |
 | Pendientes | 5 | 285 (7,0 %) | |
